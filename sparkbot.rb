@@ -25,40 +25,40 @@ require 'json'
 @irc_server.puts "JOIN #{@channel} #{@channelPass}"
 
 def can_I_spark_this? (astring)
-    (astring.delete "1234567890\s").chomp.length == 0 
+				(astring.delete "1234567890\s").chomp.length == 0 
 end
 
 def spark_it (nums) 
-  if nums =~ /[0-9]+/
-    @ticks = %w[▁ ▂ ▃ ▄ ▅ ▆ ▇ █]
-    values = nums.split.map { |x| x.to_f }
-    min, range, scale = values.min, values.max - values.min, @ticks.length - 1
-    if !(range == 0)
-      values.map { |x| @ticks[(((x - min) / range) * scale).round] }.join
-    else
-      values.map { |x| @ticks[1] }.join
-    end
-  end
+				if nums =~ /[0-9]+/
+								@ticks = %w[▁ ▂ ▃ ▄ ▅ ▆ ▇ █]
+								values = nums.split.map { |x| x.to_f }
+								min, range, scale = values.min, values.max - values.min, @ticks.length - 1
+								if !(range == 0)
+												values.map { |x| @ticks[(((x - min) / range) * scale).round] }.join
+								else
+												values.map { |x| @ticks[1] }.join
+								end
+				end
 end
 
 until @irc_server.eof? do
-  msg = @irc_server.gets
-  if msg =~ /^PING/
-    @irc_server.puts "PONG" 
-  end
-  calc = msg.split(":")[2]
-  result = nil
-	if calc != nil
-		if calc =~ /^!spark (.+)/  
-			nums = calc.gsub(/^!spark/, '').lstrip.chomp
-			if nums == "help"
-				@irc_server.puts "PRIVMSG #{@channel} :" + @help_msg	
-			elsif can_I_spark_this? nums
-				result = spark_it nums
-			end
-			if result
-				@irc_server.puts "PRIVMSG #{@channel} :" + result
-			end
-		end
-	end
+				msg = @irc_server.gets
+				if msg =~ /^PING/
+								@irc_server.puts "PONG" 
+				end
+				calc = msg.split(":")[2]
+				result = nil
+				if calc != nil
+								if calc =~ /^!spark (.+)/  
+												nums = calc.gsub(/^!spark/, '').lstrip.chomp
+												if nums == "help"
+																@irc_server.puts "PRIVMSG #{@channel} :" + @help_msg	
+												elsif can_I_spark_this? nums
+																result = spark_it nums
+												end
+												if result
+																@irc_server.puts "PRIVMSG #{@channel} :" + result
+												end
+								end
+				end
 end
