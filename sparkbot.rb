@@ -53,7 +53,7 @@ until @irc_server.eof? do
 			nums = calc.gsub(/^!spark/, '').lstrip.chomp
 			if nums == "help"
 				@irc_server.puts "PRIVMSG #{@channel} :" + @help_msg	
-			else can_I_spark_this? nums
+			elsif can_I_spark_this? nums
 				result = spark_it nums
 			end
 			if result
