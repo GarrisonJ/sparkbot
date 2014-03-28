@@ -41,9 +41,14 @@ def spark_it (nums)
   end
 end
 
+def send msg
+  @irc_server.puts "PRIVMSG #{@channel} :" + msg
+  puts msg
+end
+
 until @irc_server.eof? do
   msg = @irc_server.gets
-  p msg
+  puts msg
   if msg =~ /^PING/
     @irc_server.puts "PONG" 
   end
@@ -53,12 +58,12 @@ until @irc_server.eof? do
     if calc =~ /^!spark (.+)/  
       nums = calc.gsub(/^!spark/, '').lstrip.chomp
       if nums == "help"
-        @irc_server.puts "PRIVMSG #{@channel} :" + @help_msg	
+        send @help_msg
       elsif can_I_spark_this? nums
         result = spark_it nums
       end
       if result
-        @irc_server.puts "PRIVMSG #{@channel} :" + result
+        send result
       end
     end
   end
