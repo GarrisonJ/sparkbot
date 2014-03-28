@@ -43,6 +43,7 @@ end
 
 until @irc_server.eof? do
   msg = @irc_server.gets
+  p msg
   if msg =~ /^PING/
     @irc_server.puts "PONG" 
   end
